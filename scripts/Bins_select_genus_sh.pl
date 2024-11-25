@@ -2,30 +2,23 @@
 use strict;
 use warnings;
 
-#conda activate aniclustermap
+
 
 my $file="Species.list";
 my $outdir="/home/zhangwen/project/2023Time/Genome/Time/Genus";
-my $id="ID.txt";
-my $info="gtdbtk.bac120.summary.tsv.filter";
-my %p;my %time;my %tp;
-open(ID,$id);
+open(F,$file);my %genus;
 while(1){
-	my $line=<ID>;
+	my $line=<F>;
 	unless($line){last;};
 	chomp $line;
 	unless(substr($line,length($line)-1,1)=~/[0-9a-zA-Z]/){$line=substr($line,0,length($line)-1);}
-	my @a=split"\t",$line;
-	$p{$a[0]}=$a[1];
-	$time{$a[0]}=$a[2];
-	$tp{$a[0]}=$a[3];
+	my @a=split"_",$line;
+	if(exists $genus{$a[0]}){next;}
+	my $genus=$a[0];$genus{$genus}++;
+	system "mkdir $outdir/$genus";
+	system "perl Bins_select_genus.pl gtdbtk.bac120.summary.tsv.filter $genus /home/zhangwen/project/2023Time/Genome/Time/Bins/\n";
 }
-close ID;
-
-open(I,$info);my %sp;
-while(1){
-	my $line=<I>;
-	unless($line){last;}
+close F;line){last;}
 	chomp $line;
 	my @a=split"\t",$line;
 
@@ -57,10 +50,10 @@ while(1){
 		chomp $l;
 		my @b=split"\t",$l;
 		if($b[0] eq $b[1]){next;}
-		if($b[2]>=99.99){
+		if($b[2]>=99.95){
 			print O "$l\tSameStr\t";
 			
-		}elsif($b[2]<99.9){
+		}elsif($b[2]<98.3){
 			print O "$l\tDiffStr\t";
 		}else{
 			print O "$l\tNA\t";
@@ -77,7 +70,7 @@ while(1){
 			my $sp1=$1;
 			print O "$sp{$sp0}\t$p{$n1}\t$time{$n1}\t$tp{$n1}\t$sp{$sp1}\t$p{$n2}\t$time{$n2}\t$tp{$n2}\t";
 			if($p{$n1} eq $p{$n2}){print O "SameP\n";
-			 if($b[2]>=99.99){
+			# if($b[2]>=99.95){
 				if(exists $gp{$p{$n1}} ){
 					if( $gp{$p{$n1}} ne $sp{$sp0}){
 						print "$genus,$p{$n1},$gp{$p{$n1}},$sp{$sp0}\n";
@@ -85,7 +78,7 @@ while(1){
 				}else{
 					$gp{$p{$n1}}=$sp{$sp0};
 				}
-			 }
+			# }
 			}else{print O "DiffP\n";}
 
 	}

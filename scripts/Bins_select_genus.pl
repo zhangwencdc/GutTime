@@ -42,6 +42,4 @@ foreach my $sp (@sample) {
 	
 }
 
-#system "fastANI --ql $target/$target.list --rl $target/$target.list -o $target/$target.ANI\n";
-
-system "ANIclustermap -i $target/ -o $target/ --annotation";
+system "fastANI --ql $target/$target.list --rl $target/$target.list -o $target/$target.ANI\n";

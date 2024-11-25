@@ -70,7 +70,7 @@ if(defined $genus){
 				}else{
 					$type=0;
 				}
-			}else{
+			}
 				if($b=~/s__/ && $b=~/$genus/){
 					if($type==1){
 						my $n=@a;
@@ -82,7 +82,7 @@ if(defined $genus){
 						}
 					}
 				}
-			}
+			
 	}
 	close F;
 	
